@@ -19,23 +19,19 @@
 # use the find command to generate the list of files with their sizes, with an error redirect to /dev/null
 # use cut or awk to display only the output desired
 
-#title
 echo "Setuid files:"
 echo "============="
-#finding setuid files using type for right type and perm for right peemissions and them sort it in the end
 find / -type f -executable -perm -4000 -ls 2>/dev/null | sort -k 3
 echo ""
-
-#title
 echo "Setgid files:"
-echo "============="
-#finding setgid files using type for right type and perm for right peemissions and them sort it in the end
-find / -type f -executable -perm -6000 -ls 2>/dev/null | sort -k 8
+echo "=============="
+find / -type f -executable -perm -2000 -ls 2>/dev/null|
+sort -k 6 #finding in root dir and executing ls with -ls syntax. K6 is for sorting 6th column based on given in task1. 2 DEV NULL redirect errors into garbage so it won't be on display.2000 is to find gid and 000 means there could be whatever. read write or execure.
 echo ""
-
-#title
-echo "10 largest files:"
-echo "============="
-#finding 10 largest files of all files 
-find / -type f -exec du -h {} + 2>/dev/null | sort -h -r | head -n 10
+echo "The 10 largest regular files in the system:"
+echo "==========================================="
+find /home/ -type f -exec ls -alh 2>/dev/null --block-size=M {} \;| #Blocksize will force all field to be seen in MBytes only. -exec executes the direct ls command with sub perameters like all, list and h in it.
+sort -h -k5 | #h k5 sorts the 5th row as required
+tail -n 10| #outpots only last 10 lines
+awk '{print $9, $3, $5}' #this awk syntax will print column based on sequence
 echo ""
